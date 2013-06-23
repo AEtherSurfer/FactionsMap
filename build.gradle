@@ -52,10 +52,10 @@ processResources {
 	filter {
 		line ->
 		line
-		.replace('${name}', name)
-		.replace('${version}', version)
+		.replace('${name}', project.name)
+		.replace('${version}', project.version)
 		.replace('${buildNumber}', project.ext.buildNumber)
-		.replace('${pluginMainClass}', "${group}.${name.toLowerCase()}.$name")
+		.replace('${pluginMainClass}', "${project.group}.${project.name.toLowerCase()}.$project.name")
 	}
 }
 
