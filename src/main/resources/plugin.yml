@@ -1,0 +1,5 @@
+name: ${name}
+version: v${version}-b${buildNumber}
+main: ${pluginMainClass}
+authors: [AEtherSurfer]
+softdepend: [Factions]

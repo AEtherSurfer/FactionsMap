@@ -1,0 +1,70 @@
+apply plugin: 'scala'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'eclipse'
+
+eclipse {
+	classpath {
+		downloadSources=true
+	}
+}
+
+ext {
+	scalaVersion = '2.10.2'
+	buildNumber = "DEV"
+}
+
+group = "com.aethercraft"
+version = "0.0.1-SNAPSHOT"
+
+sourceCompatibility = 1.6
+
+repositories {
+	mavenCentral()
+	mavenRepo name:'scala-releases', url:'http://scala-tools.org/repo-releases/'
+	mavenRepo name:'scala-snapshots', url:'http://scala-tools.org/repo-snapshots/'
+	maven {
+		url "http://repo.bukkit.org/content/groups/public"
+	}
+}
+
+configurations {
+	scalaCompiler
+	scalaLibrary
+}
+
+tasks.withType(ScalaCompile) {
+	scalaCompileOptions.useCompileDaemon = false
+	scalaCompileOptions.useAnt = false
+	scalaCompileOptions.additionalParameters = ['-target:jvm-1.6']
+}
+
+dependencies {
+	scalaCompiler "org.scala-lang:scala-compiler:$scalaVersion"
+	scalaLibrary "org.scala-lang:scala-library:$scalaVersion"
+
+	compile "org.scala-lang:scala-library:$scalaVersion"
+
+	compile 'javax.servlet:servlet-api:2.4'
+	compile 'org.bukkit:bukkit:1.5.2-R1.1-SNAPSHOT'
+}
+
+processResources {
+	filter {
+		line ->
+		line
+		.replace('${name}', name)
+		.replace('${version}', version)
+		.replace('${buildNumber}', project.ext.buildNumber)
+		.replace('${pluginMainClass}', "${group}.${name.toLowerCase()}.$name")
+	}
+}
+
+//include dependencies for a "fat jar"
+//http://docs.codehaus.org/display/GRADLE/Cookbook#Cookbook-Creatingafatjar
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.6'
+}
