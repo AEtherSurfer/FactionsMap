@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/AEtherSurfer/FactionsMap.png)](https://travis-ci.org/AEtherSurfer/FactionsMap)
