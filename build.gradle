@@ -16,7 +16,7 @@ ext {
 group = "com.aethercraft"
 version = "0.0.1-SNAPSHOT"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 
 repositories {
 	mavenCentral()
@@ -35,7 +35,7 @@ configurations {
 tasks.withType(ScalaCompile) {
 	scalaCompileOptions.useCompileDaemon = false
 	scalaCompileOptions.useAnt = false
-	scalaCompileOptions.additionalParameters = ['-target:jvm-1.6']
+	scalaCompileOptions.additionalParameters = ['-target:jvm-1.7']
 }
 
 dependencies {
