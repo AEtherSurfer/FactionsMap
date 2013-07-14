@@ -5,6 +5,7 @@
 .settings
 bin
 build
+.cache
 
 # idea
 *.iml
