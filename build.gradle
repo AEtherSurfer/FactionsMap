@@ -45,6 +45,8 @@ dependencies {
 
 	compile "org.scala-lang:scala-library:$scalaVersion"
 
+    compile 'javax.servlet:servlet-api:2.4' // needed for scala based bukkit plugins
+
 	compile 'org.bukkit:bukkit:1.6.2-R0.1-SNAPSHOT'
 	compile('com.massivecraft:Factions:2.0.3AES-SNAPSHOT') {
 		exclude module: 'ProtocolLib'
