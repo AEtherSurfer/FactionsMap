@@ -5,3 +5,9 @@
 .settings
 bin
 build
+
+# idea
+*.iml
+*.ipr
+*.iws
+

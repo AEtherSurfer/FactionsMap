@@ -1,6 +1,6 @@
 apply plugin: 'scala'
-apply plugin: 'eclipse-wtp'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 eclipse {
 	classpath {
