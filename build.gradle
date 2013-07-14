@@ -68,12 +68,6 @@ processResources {
 	}
 }
 
-//include dependencies for a "fat jar"
-//http://docs.codehaus.org/display/GRADLE/Cookbook#Cookbook-Creatingafatjar
-jar {
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.6'
 }
