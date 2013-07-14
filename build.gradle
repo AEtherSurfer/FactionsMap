@@ -64,7 +64,7 @@ processResources {
 		.replace('${name}', project.name)
 		.replace('${version}', project.version)
 		.replace('${buildNumber}', project.ext.buildNumber)
-		.replace('${pluginMainClass}', "${project.group}.${project.name.toLowerCase()}.$project.name")
+		.replace('${pluginMainClass}', "${project.group}.${project.name.toLowerCase()}.Plugin")
 	}
 }
 
