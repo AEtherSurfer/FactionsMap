@@ -3,8 +3,7 @@ package com.aethercraft.factionsmap
 import org.bukkit.map.{MapPalette, MapCanvas, MapView, MapRenderer}
 import org.bukkit.entity.Player
 
-object Renderer extends MapRenderer {
-  override val isContextual = true
+object Renderer extends MapRenderer(true) {
   def render(map: MapView, canvas: MapCanvas, player: Player) {
     val ps = List(
       (0,0),  (0,1),  (0,2),
