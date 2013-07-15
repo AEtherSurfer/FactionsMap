@@ -13,7 +13,10 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     (1,0),/*(1,1),*/(1,2),
     (2,0),  (2,1),  (2,2)
   )
+  var callCount = 0;
   def render(map: MapView, canvas: MapCanvas, player: Player) {
+    callCount += 1
+    if (callCount % 128 != 0) return //throttle
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     val chunkCount = 8 << map.getScale.getValue
@@ -22,7 +25,7 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
         map.getCenterX - chunkDiameter * (chunkCount/2), 0,
         map.getCenterZ - chunkDiameter * (chunkCount/2)))
     val uplayer: UPlayer = UPlayerColls.get().getForWorld(map.getWorld.getName).get(player)
-    l.info(s"${player.getDisplayName} ${map.getScale} $chunkDiameter:$chunkCount ${map.getCenterX},${map.getCenterZ} ${uplayer.getFactionName} $topLeftPs")
+    l.info(s"${player.getDisplayName} ${map.getId} ${map.getScale.getValue}:$chunkDiameter:$chunkCount ${map.getCenterX},${map.getCenterZ} ${uplayer.getFactionName} $topLeftPs")
 
     for {
       cXO <- 0 until chunkCount //chunk x offset for map left to map right
