@@ -5,7 +5,7 @@ import org.bukkit.entity.Player
 import com.massivecraft.factions.{Rel, Factions}
 import com.massivecraft.factions.entity.{Faction, BoardColls, UPlayerColls, UPlayer}
 import com.massivecraft.mcore.ps.PS
-import org.bukkit.Location
+import org.bukkit.{Bukkit, Location}
 
 class Renderer(p: Plugin) extends MapRenderer(true) {
   val ps = List(
@@ -20,18 +20,15 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     val chunkCount = 8 << map.getScale.getValue
-    val topLeftPs = PS.valueOf(
-      new Location(map.getWorld,
-        map.getCenterX - chunkDiameter * (chunkCount/2), 0,
-        map.getCenterZ - chunkDiameter * (chunkCount/2))).getChunk(true)
+    val topLeftChunk = PS.valueOf(new Location(map.getWorld, map.getCenterX, 1, map.getCenterZ).getChunk).plusChunkCoords(-(chunkCount/2), -(chunkCount/2))
     val uplayer: UPlayer = UPlayerColls.get().getForWorld(map.getWorld.getName).get(player)
-    if (shouldLog) l.info(s"${player.getDisplayName} ${map.getId} ${map.getScale.getValue}:$chunkDiameter:$chunkCount ${map.getCenterX},${map.getCenterZ} ${uplayer.getFactionName} $topLeftPs")
+    if (shouldLog) l.info(s"${player.getDisplayName} ${map.getId} ${map.getScale.getValue}:$chunkDiameter:$chunkCount ${map.getCenterX},${map.getCenterZ} ${uplayer.getFactionName} $topLeftChunk")
 
     for {
       cXO <- 0 until chunkCount //chunk x offset for map left to map right
       cZO <- 0 until chunkCount //chunk z offset for map top to map bottom
-      ps = topLeftPs.plusChunkCoords(cXO, cZO) //PS with offsets applied
-      _ = if (shouldLog) l.info(s"$ps")
+      ps = topLeftChunk.plusChunkCoords(cXO, cZO) //PS with offsets applied
+//      _ = if (shouldLog) l.info(s"$ps")
       fac = BoardColls.get().getFactionAt(ps) //faction at PS
       if !fac.isNone
       rel = fac.getRelationTo(uplayer) //faction's relation to player
@@ -46,7 +43,8 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
       pX <- cXO * chunkDiameter until cXO * chunkDiameter + chunkDiameter //pixel xs for chunk on map
       pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
     } {
-      canvas.setPixel(pX, pZ, color)
+      val shade = canvas.getBasePixel(pX, pZ) & 7 //extract terrain shading
+      canvas.setPixel(pX, pZ, (color + shade).toByte)
     }
     /*
     Scale
