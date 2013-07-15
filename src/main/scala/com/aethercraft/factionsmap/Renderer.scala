@@ -30,7 +30,6 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
       ps = topLeftChunk.plusChunkCoords(cXO, cZO) //PS with offsets applied
 //      _ = if (shouldLog) l.info(s"$ps")
       fac = BoardColls.get().getFactionAt(ps) //faction at PS
-      if !fac.isNone
       rel = fac.getRelationTo(uplayer) //faction's relation to player
       color <- rel match {
         case Rel.MEMBER => Some(MapPalette.LIGHT_GREEN)
