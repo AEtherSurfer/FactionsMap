@@ -9,9 +9,10 @@ class Plugin extends JavaPlugin {
 
   override def onEnable() {
     for {
-      id: Short <- 0 to Short.MaxValue
-      m: MapView <- Bukkit.getMap(id)
+      id <- 0 until Short.MaxValue
+      m = Bukkit.getMap(id.toShort)
       if m != null
+    } {
       m.addRenderer(renderer)
     }
     getServer.getPluginManager.registerEvents(new Listener(this, renderer), this)
