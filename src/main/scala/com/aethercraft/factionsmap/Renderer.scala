@@ -33,18 +33,19 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
       pX <- cXO * chunkDiameter until cXO * chunkDiameter + chunkDiameter //pixel xs for chunk on map
       pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
     } {
+      val basePixel: Byte = canvas.getBasePixel(pX, pZ)
       val color = if (fac.isNone) {
-        MapPalette.TRANSPARENT
+        basePixel
       } else {
         val rel = fac.getRelationTo(uplayer) //faction's relation to player
-        val shade = canvas.getBasePixel(pX, pZ) & 3 //extract terrain shading
+        val shade = basePixel & 3 //extract terrain shading
         (rel match {
           case Rel.MEMBER => MapPalette.LIGHT_GREEN + shade
           case Rel.ALLY => MapPalette.PALE_BLUE + shade
           case Rel.TRUCE => MapPalette.WHITE + shade
           case Rel.NEUTRAL => MapPalette.LIGHT_GRAY + shade
           case Rel.ENEMY => MapPalette.RED + shade
-          case _ => MapPalette.TRANSPARENT
+          case _ => basePixel
         }).toByte
       }
       canvas.setPixel(pX, pZ, color)
