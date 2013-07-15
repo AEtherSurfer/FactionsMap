@@ -15,9 +15,10 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
   )
   val callCount = new Array[Int](2048)
   def render(map: MapView, canvas: MapCanvas, player: Player) {
-    if (callCount(map.getId) % 128 != 0) return
-    val shouldLog = callCount(map.getId) % 512 == 0
+    val shouldRender = callCount(map.getId) % 128 == 0
     callCount(map.getId) += 1
+    if (!shouldRender) return
+    val shouldLog = callCount(map.getId) % 512 == 0
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     val chunkCount = 8 << map.getScale.getValue
