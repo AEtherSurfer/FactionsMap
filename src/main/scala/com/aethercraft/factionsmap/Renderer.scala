@@ -14,7 +14,7 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     (1,0),/*(1,1),*/(1,2),
     (2,0),  (2,1),  (2,2)
   )
-  val callCount = new mutable.ArrayBuffer[Int]
+  val callCount = new Array[Short](2048)
   def render(map: MapView, canvas: MapCanvas, player: Player) {
     if (callCount(map.getId) % 128 != 0) return
     val shouldLog = callCount(map.getId) % 512 == 0
