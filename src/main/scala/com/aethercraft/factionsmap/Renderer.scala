@@ -6,6 +6,7 @@ import com.massivecraft.factions.Rel
 import com.massivecraft.factions.entity.{BoardColls, UPlayerColls, UPlayer}
 import com.massivecraft.mcore.ps.PS
 import org.bukkit.Location
+import scala.collection.mutable
 
 class Renderer(p: Plugin) extends MapRenderer(true) {
   val ps = List(
@@ -13,12 +14,14 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     (1,0),/*(1,1),*/(1,2),
     (2,0),  (2,1),  (2,2)
   )
-  val callCount = new Array[Int](2048)
+  val callCount = mutable.Map[(Short,Int),Int]()
   def render(map: MapView, canvas: MapCanvas, player: Player) {
-    val shouldRender = callCount(map.getId) % 128 == 0
-    callCount(map.getId) += 1
+    val k = (map.getId,player.getEntityId)
+    if (!callCount.contains(k)) callCount(k) = 0
+    val shouldRender = callCount(k) % 128 == 0
+    callCount(k) += 1
     if (!shouldRender) return
-    val shouldLog = callCount(map.getId) % 512 == 0
+    val shouldLog = callCount(k) % 511 == 0
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     val chunkCount = 8 << map.getScale.getValue
