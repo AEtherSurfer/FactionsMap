@@ -2,11 +2,10 @@ package com.aethercraft.factionsmap
 
 import org.bukkit.map.{MapPalette, MapCanvas, MapView, MapRenderer}
 import org.bukkit.entity.Player
-import com.massivecraft.factions.{Rel, Factions}
-import com.massivecraft.factions.entity.{Faction, BoardColls, UPlayerColls, UPlayer}
+import com.massivecraft.factions.Rel
+import com.massivecraft.factions.entity.{BoardColls, UPlayerColls, UPlayer}
 import com.massivecraft.mcore.ps.PS
-import org.bukkit.{Bukkit, Location}
-import scala.collection.mutable
+import org.bukkit.Location
 
 class Renderer(p: Plugin) extends MapRenderer(true) {
   val ps = List(
