@@ -5,8 +5,8 @@ jdk:
   - oraclejdk7
 before_install:
   - git clone https://github.com/AEtherSurfer/MCore.git
+  - git clone https://github.com/AEtherSurfer/Factions.git
   - cd MCore
   - gradle install
-  - git clone https://github.com/AEtherSurfer/Factions.git
   - cd ../Factions
   - gradle install
