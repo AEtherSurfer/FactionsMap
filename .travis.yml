@@ -3,3 +3,10 @@ scala:
   - 2.10.2
 jdk:
   - oraclejdk7
+before_install:
+  - git clone https://github.com/AEtherSurfer/MCore.git
+  - cd MCore
+  - gradle install
+  - git clone https://github.com/AEtherSurfer/Factions.git
+  - cd ../Factions
+  - gradle install
