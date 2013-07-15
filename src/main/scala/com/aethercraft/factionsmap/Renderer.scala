@@ -38,12 +38,12 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
         case Rel.TRUCE => Some(MapPalette.WHITE)
         case Rel.NEUTRAL => Some(MapPalette.LIGHT_GRAY)
         case Rel.ENEMY => Some(MapPalette.RED)
-        case _ => None
+        case _ => Some(MapPalette.TRANSPARENT)
       }
       pX <- cXO * chunkDiameter until cXO * chunkDiameter + chunkDiameter //pixel xs for chunk on map
       pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
     } {
-      val shade = canvas.getBasePixel(pX, pZ) & 7 //extract terrain shading
+      val shade = canvas.getBasePixel(pX, pZ) & 3 //extract terrain shading
       canvas.setPixel(pX, pZ, (color + shade).toByte)
     }
     /*
