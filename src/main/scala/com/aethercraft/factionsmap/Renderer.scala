@@ -25,10 +25,18 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     for {
       cXO <- 0 until chunkCount //chunk x offset for map left to map right
       cZO <- 0 until chunkCount //chunk z offset for map top to map bottom
-      ps <- topLeftPs.plusChunkCoords(cXO, cZO) //PS with offsets applied
-      fac: Faction <- BoardColls.get().getFactionAt(ps) //faction at PS
-      rel: Rel <- fac.getRelationTo(uplayer) //faction's relation to player
-      color <- rel.getColor
+      ps = topLeftPs.plusChunkCoords(cXO, cZO) //PS with offsets applied
+      fac = BoardColls.get().getFactionAt(ps) //faction at PS
+      if !fac.isNone
+      rel = fac.getRelationTo(uplayer) //faction's relation to player
+      color <- rel match {
+        case Rel.MEMBER => Some(MapPalette.LIGHT_GREEN)
+        case Rel.ALLY => Some(MapPalette.PALE_BLUE)
+        case Rel.TRUCE => Some(MapPalette.WHITE)
+        case Rel.NEUTRAL => Some(MapPalette.LIGHT_GRAY)
+        case Rel.ENEMY => Some(MapPalette.RED)
+        case _ => None
+      }
       pX <- cXO * chunkDiameter until cXO * chunkDiameter + chunkDiameter //pixel xs for chunk on map
       pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
     } {
