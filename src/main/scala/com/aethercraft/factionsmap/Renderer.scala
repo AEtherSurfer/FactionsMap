@@ -6,6 +6,7 @@ import com.massivecraft.factions.{Rel, Factions}
 import com.massivecraft.factions.entity.{Faction, BoardColls, UPlayerColls, UPlayer}
 import com.massivecraft.mcore.ps.PS
 import org.bukkit.{Bukkit, Location}
+import scala.collection.mutable
 
 class Renderer(p: Plugin) extends MapRenderer(true) {
   val ps = List(
@@ -13,10 +14,11 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     (1,0),/*(1,1),*/(1,2),
     (2,0),  (2,1),  (2,2)
   )
-  var callCount = 0;
+  val callCount = new mutable.ArrayBuffer[Int]
   def render(map: MapView, canvas: MapCanvas, player: Player) {
-    val shouldLog = callCount % 512 == 0
-    callCount += 1
+    if (callCount(map.getId) % 128 != 0) return
+    val shouldLog = callCount(map.getId) % 512 == 0
+    callCount(map.getId) += 1
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     val chunkCount = 8 << map.getScale.getValue
@@ -34,21 +36,22 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
       pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
     } {
       val basePixel: Byte = canvas.getBasePixel(pX, pZ)
+      val shade = basePixel & 3 //extract terrain shading
       val color = if (fac.isNone) {
-        basePixel
+          MapPalette.LIGHT_BROWN + shade
       } else {
         val rel = fac.getRelationTo(uplayer) //faction's relation to player
-        val shade = basePixel & 3 //extract terrain shading
-        (rel match {
-          case Rel.MEMBER => MapPalette.LIGHT_GREEN + shade
-          case Rel.ALLY => MapPalette.PALE_BLUE + shade
+        rel match {
+          case Rel.MEMBER => MapPalette.DARK_GREEN + shade
+          case Rel.ALLY => MapPalette.BLUE + shade
           case Rel.TRUCE => MapPalette.WHITE + shade
-          case Rel.NEUTRAL => MapPalette.LIGHT_GRAY + shade
+          case Rel.NEUTRAL => MapPalette.DARK_GRAY + shade
           case Rel.ENEMY => MapPalette.RED + shade
-          case _ => basePixel
-        }).toByte
+          case _ => MapPalette.LIGHT_BROWN + shade
+
+        }
       }
-      canvas.setPixel(pX, pZ, color)
+      canvas.setPixel(pX, pZ, color.toByte)
     }
     /*
     Scale
