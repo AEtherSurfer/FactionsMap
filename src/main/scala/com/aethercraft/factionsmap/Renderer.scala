@@ -16,16 +16,13 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
   def render(map: MapView, canvas: MapCanvas, player: Player) {
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
-    l.info(s"$chunkDiameter")
     val chunkCount = 8 << map.getScale.getValue
-    l.info(s"$chunkCount")
     val topLeftPs = PS.valueOf(
       new Location(map.getWorld,
         map.getCenterX - chunkDiameter * (chunkCount/2), 0,
         map.getCenterZ - chunkDiameter * (chunkCount/2)))
-    l.info(s"$topLeftPs")
     val uplayer: UPlayer = UPlayerColls.get().getForWorld(map.getWorld.getName).get(player)
-    l.info(s"$uplayer")
+    l.info(s"${player.getDisplayName} ${map.getScale} $chunkDiameter:$chunkCount ${map.getCenterX},${map.getCenterZ} ${uplayer.getFactionName} $topLeftPs")
 
     for {
       cXO <- 0 until chunkCount //chunk x offset for map left to map right
