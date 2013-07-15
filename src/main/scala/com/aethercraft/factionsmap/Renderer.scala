@@ -2,6 +2,10 @@ package com.aethercraft.factionsmap
 
 import org.bukkit.map.{MapPalette, MapCanvas, MapView, MapRenderer}
 import org.bukkit.entity.Player
+import com.massivecraft.factions.{Rel, Factions}
+import com.massivecraft.factions.entity.{Faction, BoardColls, UPlayerColls, UPlayer}
+import com.massivecraft.mcore.ps.PS
+import org.bukkit.Location
 
 class Renderer(p: Plugin) extends MapRenderer(true) {
   val ps = List(
@@ -10,8 +14,35 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     (2,0),  (2,1),  (2,2)
   )
   def render(map: MapView, canvas: MapCanvas, player: Player) {
-    val c: Byte = (player.getLocation.getBlockX % 12 * 4).toByte
-    for ((x,y) <- ps)
-      canvas.setPixel(x, y, c)
+    val chunkDiameter = 16 >> map.getScale.getValue
+    val chunkCount = 8 << map.getScale.getValue
+    val topLeftPs = PS.valueOf(
+      new Location(map.getWorld,
+        map.getCenterX - chunkDiameter * (chunkCount/2), 0,
+        map.getCenterZ - chunkDiameter * (chunkCount/2)))
+    val uplayer: UPlayer = UPlayerColls.get().getForWorld(map.getWorld.getName).get(player)
+
+    for {
+      cXO <- 0 until chunkCount //chunk x offset for map left to map right
+      cZO <- 0 until chunkCount //chunk z offset for map top to map bottom
+      ps <- topLeftPs.plusChunkCoords(cXO, cZO) //PS with offsets applied
+      fac: Faction <- BoardColls.get().getFactionAt(ps) //faction at PS
+      rel: Rel <- fac.getRelationTo(uplayer) //faction's relation to player
+      color <- rel.getColor
+      pX <- cXO * chunkDiameter until cXO * chunkDiameter + chunkDiameter //pixel xs for chunk on map
+      pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
+    } {
+      canvas.setPixel(pX, pZ, color)
+    }
+    /*
+    Scale
+    |  Pixels^2 per chunk
+    |  |   Chunks^2 per map
+    0 16   8
+    1  8  16
+    2  4  32
+    3  2  64
+    4  1 128
+    */
   }
 }
