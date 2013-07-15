@@ -14,6 +14,7 @@ class Plugin extends JavaPlugin {
       if m != null
     } {
       m.addRenderer(renderer)
+      getLogger.info(s"adding renderer to $m")
     }
     getServer.getPluginManager.registerEvents(new Listener(this, renderer), this)
   }
