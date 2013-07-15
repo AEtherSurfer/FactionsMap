@@ -16,7 +16,7 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
   var callCount = 0;
   def render(map: MapView, canvas: MapCanvas, player: Player) {
     callCount += 1
-    val shouldLog = callCount % 128 == 0
+    val shouldLog = callCount % 512 == 0
     val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     val chunkCount = 8 << map.getScale.getValue
@@ -30,7 +30,9 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
     for {
       cXO <- 0 until chunkCount //chunk x offset for map left to map right
       cZO <- 0 until chunkCount //chunk z offset for map top to map bottom
+      _ = if (shouldLog) l.info(s"$cXO, $cZO")
       ps = topLeftPs.plusChunkCoords(cXO, cZO) //PS with offsets applied
+      _ = if (shouldLog) l.info(s"$ps")
       fac = BoardColls.get().getFactionAt(ps) //faction at PS
       if !fac.isNone
       rel = fac.getRelationTo(uplayer) //faction's relation to player
