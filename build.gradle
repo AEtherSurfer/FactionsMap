@@ -52,8 +52,8 @@ dependencies {
 		exclude module: 'ProtocolLib'
 		exclude module: 'Privileges'
 		exclude module: 'craftconomy3'
-		exclude module: 'MCore'
-		exclude module: 'SDFEconomy'
+        exclude module: 'SDFEconomy'
+        exclude module: 'Vault'
 	}
 }
 
