@@ -8,13 +8,13 @@ import com.massivecraft.mcore.ps.PS
 import org.bukkit.Location
 
 class Renderer(p: Plugin) extends MapRenderer(true) {
-  val l = p.getLogger
   val ps = List(
     (0,0),  (0,1),  (0,2),
     (1,0),/*(1,1),*/(1,2),
     (2,0),  (2,1),  (2,2)
   )
   def render(map: MapView, canvas: MapCanvas, player: Player) {
+    val l = p.getLogger
     val chunkDiameter = 16 >> map.getScale.getValue
     l.info(s"$chunkDiameter")
     val chunkCount = 8 << map.getScale.getValue
