@@ -30,20 +30,24 @@ class Renderer(p: Plugin) extends MapRenderer(true) {
       ps = topLeftChunk.plusChunkCoords(cXO, cZO) //PS with offsets applied
 //      _ = if (shouldLog) l.info(s"$ps")
       fac = BoardColls.get().getFactionAt(ps) //faction at PS
-      rel = fac.getRelationTo(uplayer) //faction's relation to player
-      color <- rel match {
-        case Rel.MEMBER => Some(MapPalette.LIGHT_GREEN)
-        case Rel.ALLY => Some(MapPalette.PALE_BLUE)
-        case Rel.TRUCE => Some(MapPalette.WHITE)
-        case Rel.NEUTRAL => Some(MapPalette.LIGHT_GRAY)
-        case Rel.ENEMY => Some(MapPalette.RED)
-        case _ => Some(MapPalette.TRANSPARENT)
-      }
       pX <- cXO * chunkDiameter until cXO * chunkDiameter + chunkDiameter //pixel xs for chunk on map
       pZ <- cZO * chunkDiameter until cZO * chunkDiameter + chunkDiameter //pixel zs for chunk on map
     } {
-      val shade = canvas.getBasePixel(pX, pZ) & 3 //extract terrain shading
-      canvas.setPixel(pX, pZ, (color + shade).toByte)
+      val color = if (fac.isNone) {
+        MapPalette.TRANSPARENT
+      } else {
+        val rel = fac.getRelationTo(uplayer) //faction's relation to player
+        val shade = canvas.getBasePixel(pX, pZ) & 3 //extract terrain shading
+        (rel match {
+          case Rel.MEMBER => MapPalette.LIGHT_GREEN + shade
+          case Rel.ALLY => MapPalette.PALE_BLUE + shade
+          case Rel.TRUCE => MapPalette.WHITE + shade
+          case Rel.NEUTRAL => MapPalette.LIGHT_GRAY + shade
+          case Rel.ENEMY => MapPalette.RED + shade
+          case _ => MapPalette.TRANSPARENT
+        }).toByte
+      }
+      canvas.setPixel(pX, pZ, color)
     }
     /*
     Scale
