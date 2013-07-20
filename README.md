@@ -3,3 +3,5 @@
 FactionsMap
 
 Paints the factions land to actual minecraft maps.
+
+Requires http://github.com/AEtherSurfer/ScalaBukkit
