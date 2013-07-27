@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/AEtherSurfer/FactionsMap.png)](https://travis-ci.org/AEtherSurfer/FactionsMap)
+[![Build Status](https://travis-ci.org/AEtherSurfer/FactionsMap.png?branch=master)](https://travis-ci.org/AEtherSurfer/FactionsMap)
 
 FactionsMap
 ===========
